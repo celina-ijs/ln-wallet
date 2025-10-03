@@ -27,6 +27,18 @@ async function build() {
     plugins: [],
   }).catch(() => process.exit(1));
   let plugin = await readFile('dist/plugin.js');
+  plugin = plugin.replace(`var __export = (target, all) => {
+  __markAsModule(target);
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};`,
+    `var __export = (target, all) => { 
+  if (target && typeof target === 'object') {
+    __markAsModule(target); 
+    for (var name in all) __defProp(target, name, { get: all[name], enumerable: true });
+  }
+};`
+  )
   let content = `
 var __defineAmdValue;
 if (typeof(define) == 'function'){
